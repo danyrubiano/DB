@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Fotolog</title>
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700,300' rel='stylesheet' type='text/css'>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+
+  <%= render "partials/navigation" %>
+
+</head>
+
+<body>
+  </br>
+  <div style="width:90%; margin:0 auto;">
+    <p class="navbar-text pull-right", align="right">
+    <% if user_signed_in? && current_user.is_admin?%>
+      Admin <strong><%= current_user.email %></strong> !!!
+    <% elsif user_signed_in? && current_user.is_gold_user?%>
+      <strong><%= current_user.email %></strong> 
+      <span style="font-size:14px;font-family: Comic Sans MS;color:#FFDF00">Gold User</span>
+      <%=image_tag "gold_user.jpg", size:"25x20"%>
+    <% elsif user_signed_in? && current_user.is_normal_user?%>
+      <strong><%= current_user.email %></strong> 
+      <span style="font-size:14px;font-family: Comic Sans MS;color:#FF0080">Normal User</span>
+      <%=image_tag "normal_user.png", size:"25x20"%>
+      
+    <% end %>
+    <% if user_signed_in? %>
+        <%= image_tag current_user.foto_perfil.url(:min), class:"blockquote" %>
+    <% end %>
+      <% if user_signed_in? && current_user.is_normal_user?%>
+        </br></br>
+        <strong><%= link_to "Ser GOLD", "/compraGold", class:"btn3 be-gold" %></strong>
+      <% end %>
+    </p>
+
+    <% if notice %>
+      <p class="alert alert-success">
+        <%=image_tag "check.png", size:"20"%>
+        <span style="font-size:15px;font-family: Comic Sans MS;color:#04B404"><%= notice %></span>
+      </p>
+    <% end %>
+    <% if alert %>
+      <p class="alert alert-danger">
+        <%=image_tag "wrong.png", size:"20"%>
+        <span style="font-size:15px;font-family: Comic Sans MS;color:#FF0040"><%= alert %></span>
+      </p>
+    <% end %>
+  </div>
+
+  <%= yield %>
+
+</body>
+</html>

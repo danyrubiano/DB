@@ -1,0 +1,35 @@
+<div style="width:90%; margin:0 auto;">
+
+<h1>Lista de Usuarios</h1>
+<table>
+  <thead>
+    <tr>
+    <th></th>  
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+   <% @users.each do |user| %>
+      <tr>
+        <% if not user.is_admin? %>
+          <% if user.is_normal_user? || user.is_gold_user?  %> 
+            <td> <span style="font-size:16px;font-family: Comic Sans MS;color:MidnightBlue">
+              <%= link_to user.email, perfil_path(user.id) %>
+            </span></td>
+            <% if user.may_bloquear?%>
+              <td><%= link_to "- Bloquear", "/users/#{user.id}/bloqueados", class:"red", method: :delete %></td>
+            <% end %>
+            <% if user.may_activar?%>
+              <td><%= link_to "- Activar", "/users/#{user.id}/activos", class:"blue", method: :put %></td>
+            <% end %>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+<br>
+</div>

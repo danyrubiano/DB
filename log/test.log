@@ -1,0 +1,1629 @@
+  [1m[36m (42.3ms)[0m  [1mDROP DATABASE IF EXISTS `fotolog_test`[0m
+  [1m[35m (0.3ms)[0m  CREATE DATABASE `fotolog_test` DEFAULT CHARACTER SET `utf8` COLLATE `utf8_unicode_ci`
+  [1m[36m (291.0ms)[0m  [1mCREATE TABLE `amigos` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `friend_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB[0m
+  [1m[35m (311.8ms)[0m  CREATE  INDEX `index_amigos_on_user_id` USING btree ON `amigos` (`user_id`) 
+  [1m[36m (77.5ms)[0m  [1mCREATE TABLE `comments` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `post_id` int(11), `body` text, `anonimo` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL, `tipo_usuario` int(11)) ENGINE=InnoDB[0m
+  [1m[35m (144.9ms)[0m  CREATE  INDEX `index_comments_on_post_id` USING btree ON `comments` (`post_id`) 
+  [1m[36m (133.9ms)[0m  [1mCREATE  INDEX `index_comments_on_user_id` USING btree ON `comments` (`user_id`) [0m
+  [1m[35m (66.0ms)[0m  CREATE TABLE `posts` (`id` int(11) auto_increment PRIMARY KEY, `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL, `titulo` varchar(255), `descripcion` text, `user_id` int(11), `visits_count` int(11), `cover_file_name` varchar(255), `cover_content_type` varchar(255), `cover_file_size` int(11), `cover_updated_at` datetime, `total_comments` int(11) DEFAULT 0, `num_calificaciones` int(11) DEFAULT 0, `calificacion_total` int(11) DEFAULT 0) ENGINE=InnoDB
+  [1m[36m (156.0ms)[0m  [1mCREATE  INDEX `index_posts_on_user_id` USING btree ON `posts` (`user_id`) [0m
+  [1m[35m (77.2ms)[0m  CREATE TABLE `relationships` (`id` int(11) auto_increment PRIMARY KEY, `follower_id` int(11), `followed_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL) ENGINE=InnoDB
+  [1m[36m (136.0ms)[0m  [1mCREATE  INDEX `index_relationships_on_followed_id` USING btree ON `relationships` (`followed_id`) [0m
+  [1m[35m (156.0ms)[0m  CREATE UNIQUE INDEX `index_relationships_on_follower_id_and_followed_id` USING btree ON `relationships` (`follower_id`, `followed_id`) 
+  [1m[36m (133.9ms)[0m  [1mCREATE  INDEX `index_relationships_on_follower_id` USING btree ON `relationships` (`follower_id`) [0m
+  [1m[35m (65.7ms)[0m  CREATE TABLE `users` (`id` int(11) auto_increment PRIMARY KEY, `email` varchar(255) DEFAULT '' NOT NULL, `encrypted_password` varchar(255) DEFAULT '' NOT NULL, `reset_password_token` varchar(255), `reset_password_sent_at` datetime, `remember_created_at` datetime, `sign_in_count` int(11) DEFAULT 0 NOT NULL, `current_sign_in_at` datetime, `last_sign_in_at` datetime, `current_sign_in_ip` varchar(255), `last_sign_in_ip` varchar(255), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL, `name` varchar(255), `permission_level` int(11) DEFAULT 1, `post_diarios` int(11) DEFAULT 0, `name_user` varchar(255), `last_name` varchar(255), `fecha_nacimiento` date, `state` varchar(255) DEFAULT 'activo', `foto_perfil_file_name` varchar(255), `foto_perfil_content_type` varchar(255), `foto_perfil_file_size` int(11), `foto_perfil_updated_at` datetime) ENGINE=InnoDB
+  [1m[36m (144.9ms)[0m  [1mCREATE UNIQUE INDEX `index_users_on_email` USING btree ON `users` (`email`) [0m
+  [1m[35m (122.8ms)[0m  CREATE UNIQUE INDEX `index_users_on_reset_password_token` USING btree ON `users` (`reset_password_token`) 
+  [1m[36m (66.1ms)[0m  [1mCREATE TABLE `valorations` (`id` int(11) auto_increment PRIMARY KEY, `user_id` int(11), `post_id` int(11), `created_at` datetime NOT NULL, `updated_at` datetime NOT NULL, `calificacion` int(11) DEFAULT 0) ENGINE=InnoDB[0m
+  [1m[35m (123.0ms)[0m  CREATE  INDEX `index_valorations_on_post_id` USING btree ON `valorations` (`post_id`) 
+  [1m[36m (146.8ms)[0m  [1mCREATE  INDEX `index_valorations_on_user_id` USING btree ON `valorations` (`user_id`) [0m
+  [1m[35m (201.2ms)[0m  ALTER TABLE `amigos` ADD CONSTRAINT `fk_rails_1edd3f9c29`
+FOREIGN KEY (`user_id`)
+  REFERENCES `users` (`id`)
+
+  [1m[36m (179.1ms)[0m  [1mALTER TABLE `comments` ADD CONSTRAINT `fk_rails_2fd19c0db7`
+FOREIGN KEY (`post_id`)
+  REFERENCES `posts` (`id`)
+[0m
+  [1m[35m (200.8ms)[0m  ALTER TABLE `comments` ADD CONSTRAINT `fk_rails_03de2dc08c`
+FOREIGN KEY (`user_id`)
+  REFERENCES `users` (`id`)
+
+  [1m[36m (190.0ms)[0m  [1mALTER TABLE `posts` ADD CONSTRAINT `fk_rails_5b5ddfd518`
+FOREIGN KEY (`user_id`)
+  REFERENCES `users` (`id`)
+[0m
+  [1m[35m (225.4ms)[0m  ALTER TABLE `valorations` ADD CONSTRAINT `fk_rails_1da23fe080`
+FOREIGN KEY (`post_id`)
+  REFERENCES `posts` (`id`)
+
+  [1m[36m (212.4ms)[0m  [1mALTER TABLE `valorations` ADD CONSTRAINT `fk_rails_f1ea87a8d6`
+FOREIGN KEY (`user_id`)
+  REFERENCES `users` (`id`)
+[0m
+  [1m[35m (74.6ms)[0m  CREATE TABLE `schema_migrations` (`version` varchar(255) NOT NULL) ENGINE=InnoDB
+  [1m[36m (189.3ms)[0m  [1mCREATE UNIQUE INDEX `unique_schema_migrations`  ON `schema_migrations` (`version`) [0m
+  [1m[35m (0.3ms)[0m  SELECT version FROM `schema_migrations`
+  [1m[36m (43.8ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150927233024')[0m
+  [1m[35m (33.3ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150825190008')
+  [1m[36m (44.5ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150825185004')[0m
+  [1m[35m (44.5ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150916130955')
+  [1m[36m (33.3ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150822011130')[0m
+  [1m[35m (44.3ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150825133741')
+  [1m[36m (44.5ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150901225514')[0m
+  [1m[35m (44.4ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150825153253')
+  [1m[36m (44.6ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150821193731')[0m
+  [1m[35m (44.7ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150825133531')
+  [1m[36m (44.3ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150901230023')[0m
+  [1m[35m (44.5ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150921195606')
+  [1m[36m (44.5ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150916193327')[0m
+  [1m[35m (44.4ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150825192228')
+  [1m[36m (44.3ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150901230111')[0m
+  [1m[35m (44.5ms)[0m  INSERT INTO `schema_migrations` (version) VALUES ('20150916193352')
+  [1m[36m (44.5ms)[0m  [1mINSERT INTO `schema_migrations` (version) VALUES ('20150916155306')[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.2ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (47.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.4ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.0ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.0ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (27.8ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (50.6ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.0ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (27.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.3ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.8ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.3ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (68.6ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (28.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (38.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.0ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:54', '2015-09-27 23:44:54', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (27.4ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.0ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.0ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (50.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-27 23:44:55', '2015-09-27 23:44:55', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (28.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:08', '2015-09-28 00:05:08', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:08', '2015-09-28 00:05:08', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (45.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:08', '2015-09-28 00:05:08', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:08', '2015-09-28 00:05:08', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (183.3ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:08', '2015-09-28 00:05:08', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:08', '2015-09-28 00:05:08', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:08', '2015-09-28 00:05:08', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:08', '2015-09-28 00:05:08', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (28.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.3ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (28.5ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.7ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (49.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.6ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.3ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.6ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.8ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (40.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.7ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.5ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (25.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (60.6ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.3ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.6ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (36.0ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (26.9ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (38.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.3ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)
+  [1m[36mFixture Delete (0.8ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (42.8ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:09', '2015-09-28 00:05:09', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (37.5ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:10', '2015-09-28 00:05:10', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:05:10', '2015-09-28 00:05:10', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (26.7ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (47.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.0ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.8ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (30.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.0ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (40.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (28.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.5ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.0ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.9ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (40.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (37.6ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.9ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (47.0ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.3ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:47', '2015-09-28 00:07:47', 298486374)
+  [1m[36mFixture Delete (0.8ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (56.9ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.3ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.3ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)[0m
+  [1m[35mFixture Delete (0.8ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (26.6ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)
+  [1m[36mFixture Delete (0.5ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (43.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (36.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (27.0ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (26.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.0ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (28.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (29.0ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.0ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (30.7ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)
+  [1m[36mFixture Delete (5.7ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (44.6ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:07:48', '2015-09-28 00:07:48', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (65.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.6ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.0ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (28.5ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.7ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (41.8ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:29', '2015-09-28 00:08:29', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.6ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.6ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (47.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (37.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (50.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (38.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (27.0ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (28.1ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.0ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.7ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (28.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.0ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (28.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (27.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (38.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (48.8ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.0ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (27.5ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (229.0ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (44.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.2ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.3ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:08:30', '2015-09-28 00:08:30', 298486374)
+  [1m[36mFixture Delete (0.6ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (47.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (66.5ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (27.9ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (28.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (28.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (50.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.0ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.7ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (28.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.2ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.8ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (38.8ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.0ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.5ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:45', '2015-09-28 00:09:45', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.8ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (38.7ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)
+  [1m[36mFixture Delete (0.5ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (37.8ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (50.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.2ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.3ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)
+  [1m[36mFixture Insert (0.3ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)[0m
+  [1m[35mFixture Delete (0.6ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (46.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (40.8ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (28.0ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (27.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (38.7ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.1ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (27.8ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (44.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:09:46', '2015-09-28 00:09:46', 298486374)
+  [1m[36mFixture Delete (0.6ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (46.8ms)[0m  ROLLBACK
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[36mActiveRecord::SchemaMigration Load (0.1ms)[0m  [1mSELECT `schema_migrations`.* FROM `schema_migrations`[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.5ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (137.5ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.6ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.6ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.3ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.9ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.5ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (37.8ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)
+  [1m[36mFixture Delete (0.6ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (36.4ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (28.2ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.3ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.2ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (29.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.7ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.6ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (41.5ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:58', '2015-09-28 00:10:58', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.9ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.2ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.2ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.2ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.2ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)
+  [1m[36mFixture Insert (0.2ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)[0m
+  [1m[35mFixture Delete (0.5ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (44.4ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.0ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (39.0ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.1ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)
+  [1m[36mFixture Delete (0.3ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (39.1ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)[0m
+  [1m[35mFixture Delete (0.3ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (49.9ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (27.8ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m
+  [1m[35m (0.1ms)[0m  SELECT @@FOREIGN_KEY_CHECKS
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 0[0m
+  [1m[35m (0.1ms)[0m  BEGIN
+  [1m[36mFixture Delete (0.1ms)[0m  [1mDELETE FROM `amigos`[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)[0m
+  [1m[35mFixture Delete (0.4ms)[0m  DELETE FROM `comentarios`
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[36m (43.8ms)[0m  [1mROLLBACK[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 1
+  [1m[36m (0.2ms)[0m  [1mSELECT @@FOREIGN_KEY_CHECKS[0m
+  [1m[35m (0.1ms)[0m  SET FOREIGN_KEY_CHECKS = 0
+  [1m[36m (0.1ms)[0m  [1mBEGIN[0m
+  [1m[35mFixture Delete (0.1ms)[0m  DELETE FROM `amigos`
+  [1m[36mFixture Insert (0.1ms)[0m  [1mINSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 980190962)[0m
+  [1m[35mFixture Insert (0.1ms)[0m  INSERT INTO `amigos` (`user_id`, `friend_id`, `created_at`, `updated_at`, `id`) VALUES (NULL, 1, '2015-09-28 00:10:59', '2015-09-28 00:10:59', 298486374)
+  [1m[36mFixture Delete (0.4ms)[0m  [1mDELETE FROM `comentarios`[0m
+Mysql2::Error: Table 'fotolog_test.comentarios' doesn't exist: DELETE FROM `comentarios`
+  [1m[35m (37.2ms)[0m  ROLLBACK
+  [1m[36m (0.1ms)[0m  [1mSET FOREIGN_KEY_CHECKS = 1[0m

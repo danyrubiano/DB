@@ -1,0 +1,21 @@
+<div style="width:90%; margin:0 auto;">
+  <% provide(:title, @title) %>
+  <h1><%= @title %></h1>
+  </br>
+  <% if @users.any? %>
+    <table>
+      <% @users.each do |user| %>
+        <tr>
+          <td>
+            <%= link_to (image_tag user.foto_perfil.url(:min), class:"blockquote"), perfil_path(user.id) %>
+          </td>
+          <td>
+            <span style="font-size:17px;font-family: Comic Sans MS;color:MidnightBlue">
+              <strong><%= link_to user.email, perfil_path(user.id) %></strong>
+            </span>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+</div>

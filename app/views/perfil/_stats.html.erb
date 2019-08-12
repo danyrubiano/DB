@@ -1,0 +1,12 @@
+<div>
+    <strong id="following">
+      <%= link_to @users.following.count, '/perfil/#{@users.id}/following' %>
+    </strong>
+    following
+  |
+    <strong id="followers">
+      <%= link_to @users.followers.count, '/perfil/#{@users.id}/followers'%>
+    </strong>
+    followers
+  </a>
+</div>

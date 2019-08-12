@@ -1,0 +1,44 @@
+<div style="width:90%; margin:0 auto;">
+
+<% if (user_signed_in? && current_user.is_normal_user?) || (user_signed_in? && current_user.is_gold_user?) %>
+  <h1>Mis posts</h1>
+<% elsif user_signed_in? && current_user.is_admin? %>
+  <h1>Todos los posts</h1>
+<% end %>
+  
+
+<div class="row">
+  <% @posts.each do |post| %>
+   <% if user_signed_in? %>
+    <div class="col-md-4 top-space">
+      <div class="box relative article-height">
+        <div class="absolute article-height background-cover" style= "background:url(<%= post.cover.url(:thumb)%>); top:0px;left:0px; width:100%;">
+        </div>
+
+        <div class="absolute article-height background-cover" style= "background:rgba(0,0,0,0.2); top:0px;left:0px; width:100%;">
+          <!%= link_to image_tag(post.cover.url(:max)), post%>
+        </div>
+
+        <div class="relative white text-center text-shadow">
+          <h4><%= link_to post.user.email, post %></h4>
+        </div>
+        </p>
+      </div>
+    </div>
+   <% end %>  
+  <% end %>
+</div>
+
+<% if (user_signed_in? && current_user.is_normal_user?) || (user_signed_in? && current_user.is_gold_user?) %>
+  </br>
+  <div class="text-center">
+    <h3> <%= link_to '+ Nuevo Post +', new_post_path, class:"btn1 be-blue white"%> </h3>
+  </div>
+<% end %>
+
+  </br>
+  <div class="text-center">
+    <%= will_paginate @posts %>
+  </div>
+
+</div>

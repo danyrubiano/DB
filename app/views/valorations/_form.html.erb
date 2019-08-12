@@ -1,0 +1,26 @@
+<%= form_for([@post,@valoration]) do |f| %>
+  <% if @valoration.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@valoration.errors.count, "error") %> prohibited this valoration from being saved:</h2>
+
+      <ul>
+      <% @valoration.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  
+  <div style="width:95%; margin:0 auto;">
+    <div class="field">
+      <%= f.hidden_field :user_id %>
+    </div>
+    <div class="field">
+      <%= f.number_field :calificacion, placeholder: "Calificación", class:"form-control6" %>
+    </div>
+    <div class="actions">
+      <%= f.submit "Añadir valoración", class:"btn2 be-blue white large-padding" %>
+    </div>
+  </div>
+
+<% end %>

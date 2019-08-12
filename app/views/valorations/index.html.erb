@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Valorations</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>User</th>
+      <th>Post</th>
+      <th>Calificacion</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @valorations.each do |valoration| %>
+      <tr>
+        <td><%= valoration.user %></td>
+        <td><%= valoration.post %></td>
+        <td><%= valoration.calificacion %></td>
+        <td><%= link_to 'Show', valoration %></td>
+        <td><%= link_to 'Edit', edit_valoration_path(valoration) %></td>
+        <td><%= link_to 'Destroy', valoration, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Valoration', new_valoration_path %>

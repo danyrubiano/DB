@@ -1,0 +1,2 @@
+module SerGoldHelper
+end

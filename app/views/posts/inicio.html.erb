@@ -1,0 +1,119 @@
+<div style="width:90%; margin:0 auto;">
+
+<% if (user_signed_in? && current_user.is_normal_user?) || (user_signed_in? && current_user.is_gold_user?) %>
+
+<h1>Ultimos posts de mis followings</h1>
+
+<div class="row">
+  <% @users.each do |user| %>
+    <% @posts_f.each do |post| %>
+      <% if post.user.id == user.id %>
+        <div class="col-md-3 top-space">
+          <div class="box relative article-height">
+            <div class="absolute article-height background-cover" style= "background:url(<%=post.cover.url(:max)%>); top:0px;left:0px; width:100%;">
+            </div>
+
+            <div class="absolute article-height background-cover" style= "background:rgba(0,0,0,0.2); top:0px;left:0px; width:100%;">
+            </div>
+
+            <div class="relative white text-center text-shadow">
+              <h4><%= link_to post.user.email, post %></h4>
+            </div>
+
+            <div class = "row">
+              <div class="col-md-offset-2 col-md-3 white text-center text-bottom relative">
+                <strong> Visitas:</strong> <%= post.visits_count %>
+              </div>
+              <div class= "relative col-md-offset-1">
+              <% if post.calificacion_total == 0 %>
+                <fieldset class="val-fieldset"><span class="valoracion val-0"></span></fieldset>
+              <%end%>
+
+              <% unless post.calificacion_total.nil? %>
+                <%if post.calificacion_total != 0 && post.num_calificaciones != 0%>
+                  <% if post.calificacion_total/post.num_calificaciones == 1 %>
+                    <fieldset class="val-fieldset"><span class="valoracion val-10"></span></fieldset>
+                  <% elsif post.calificacion_total/post.num_calificaciones == 2 %>
+                    <fieldset class="val-fieldset"><span class="valoracion val-20"></span></fieldset>
+                  <% elsif post.calificacion_total/post.num_calificaciones == 3 %>
+                    <fieldset class="val-fieldset"><span class="valoracion val-30"></span></fieldset>
+                  <% elsif post.calificacion_total/post.num_calificaciones == 4 %>
+                    <fieldset class="val-fieldset"><span class="valoracion val-40"></span></fieldset>
+                  <% elsif post.calificacion_total/post.num_calificaciones == 5 %>
+                    <fieldset class="val-fieldset"><span class="valoracion val-50"></span></fieldset>
+                  <%end%>
+                <%end%>
+              <%end%>
+            </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
+<% end %>
+</br></br></br>
+
+<h1>Ultimos posts más populares</h1>
+
+<div class="row">
+  <% @posts.each do |post| %>
+    <div class="col-md-3 top-space">
+      <div class="box relative article-height">
+        <div class="absolute article-height background-cover" style= "background:url(<%=post.cover.url(:max)%>); top:0px;left:0px; width:100%;">
+        </div>
+
+        <div class="absolute article-height background-cover" style= "background:rgba(0,0,0,0.2); top:0px;left:0px; width:100%;">
+        </div>
+
+        <div class="relative white text-center text-shadow">
+          <h4><%= link_to post.user.email, post %></h4>
+        </div>
+
+        <div class = "row">
+          <div class="col-md-offset-2 col-md-3 white text-center text-bottom relative">
+            <strong> Visitas:</strong> <%= post.visits_count %>
+          </div>
+          <div class= "relative col-md-offset-1">
+          <% if post.calificacion_total == 0 %>
+            <fieldset class="val-fieldset"><span class="valoracion val-0"></span></fieldset>
+          <%end%>
+
+          <% unless post.calificacion_total.nil? %>
+            <%if post.calificacion_total != 0 && post.num_calificaciones != 0%>
+              <% if post.calificacion_total/post.num_calificaciones == 1 %>
+                <fieldset class="val-fieldset"><span class="valoracion val-10"></span></fieldset>
+              <% elsif post.calificacion_total/post.num_calificaciones == 2 %>
+                <fieldset class="val-fieldset"><span class="valoracion val-20"></span></fieldset>
+              <% elsif post.calificacion_total/post.num_calificaciones == 3 %>
+                <fieldset class="val-fieldset"><span class="valoracion val-30"></span></fieldset>
+              <% elsif post.calificacion_total/post.num_calificaciones == 4 %>
+                <fieldset class="val-fieldset"><span class="valoracion val-40"></span></fieldset>
+              <% elsif post.calificacion_total/post.num_calificaciones == 5 %>
+                <fieldset class="val-fieldset"><span class="valoracion val-50"></span></fieldset>
+              <%end%>
+            <%end%>
+          <%end%>
+          </div>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+
+<% if (user_signed_in? && current_user.is_normal_user?) || (user_signed_in? && current_user.is_gold_user?)%>
+  </br>
+  <div class="text-center">
+    <h3> <%= link_to '+ Nuevo Post +', new_post_path, class:"btn1 be-blue white"%> </h3>
+  </div>
+<% end %>
+
+  </br>
+  <div class="text-center">
+    <%= will_paginate @posts %>
+  </div>
+
+</div>

@@ -1,0 +1,70 @@
+<div style="width:90%; margin:0 auto;">
+
+<table>
+  <tr>
+  	<td>
+      <table>
+        <tr>
+          <th colspan="4"><h1>Actividad de Posts</h1></th>
+        </tr>
+        <% @posts.each do |post| %>
+          <tr>
+            <td><%= post.updated_at %> </td>
+  	        <td><strong> - <%= link_to post.user.email, perfil_path(post.user.id), class:"blue" %></strong></td> 
+            <td>hizo un post</td>
+            <td><%= link_to (image_tag post.cover.url(:minini), class:"blockquote"), post %></td>
+          </tr>
+        <% end %>
+          <tr>
+            <td colspan="4" class="text-center"></br><%= will_paginate @posts %></td>
+          </tr>
+      </table>
+      </br></br></br>
+
+      <table>
+        <tr>
+          <th colspan="6"><h1>Actividad de Valoraciones</h1></th>
+        </tr>
+        <% @valorations.each do |valoration| %>
+  	      <tr>
+            <td><%= valoration.updated_at %></td>
+            <td><strong> - <%= link_to valoration.user.email, perfil_path(valoration.user.id), class:"blue" %></strong></td>
+            <td>valoró:</td>
+            <td><strong> <%= valoration.calificacion %> </strong></td>
+            <td>en el post</td>
+            <td><strong><%= link_to valoration.post, valoration.post, class:"blue"%><strong></td>
+          </tr>
+        <% end %>
+          <tr>
+            <td colspan="6" class="text-center"></br><%= will_paginate @valorations %></td>
+          </tr>
+      </table>
+    </td>
+
+    </br></br></br>
+
+    <td>
+      <table>
+        <tr>
+          <th colspan="6"><h1>Actividad de Comentarios</h1></th>
+        </tr>
+        <% @comments.each do |comment| %>
+          <tr>  
+            <td><%= comment.updated_at %> </td>
+            <td><strong>- <%= comment.anonimo %> </strong></td>
+            <td>comentó:</td>
+            <td><strong> <%= comment.body %> </strong></td>
+            <td>en el post</td>
+            <td><strong><%= link_to comment.post, comment.post, class:"blue"%><strong></td>
+          </tr>
+        <% end %>
+          <tr>
+            <td colspan="6" class="text-center"></br><%= will_paginate @comments%></td>
+          </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+</br></br></br>
+</div>
+  

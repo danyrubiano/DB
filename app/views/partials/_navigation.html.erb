@@ -1,0 +1,89 @@
+<head>
+
+    <nav class="be-blue white large-padding">
+      <ul class="no-list row center-xs middle-xs">
+        <li class="col-md">
+          <div class="no-margin" id="logo"> 
+            <strong>
+              <span style="font-size:21px">
+                <%= link_to "FOTOLOG", root_path %> 
+              </span>
+            </strong>
+          </div>
+        </li>
+        <li class="col-md">
+          <span style="font-size:14px">
+            <%= link_to 'Inicio', root_path %>
+          </span>
+        </li>
+
+        <% if user_signed_in? && current_user.is_admin? %>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to 'Todos los Posts', posts_path %>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to 'Post más Populares', root_path %>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to 'Tabla de Auditoria', "/auditoria"%>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to 'Usuarios', "/dashboard_usuarios"%>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to "Salir", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+            </span>
+          </li>
+
+        <% elsif (user_signed_in? && current_user.is_normal_user?) || (user_signed_in? && current_user.is_gold_user?) %>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to 'Mis Posts', posts_path %>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to 'Following', "/perfil/#{current_user.id}/following" %>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to 'Followers', "/perfil/#{current_user.id}/followers" %>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to 'Editar Cuenta', edit_user_registration_path, :class => 'navbar-link' %>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to "Salir", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
+            </span>
+          </li>
+
+        <% else %>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to "Registrarse", new_user_registration_path, :class => 'navbar-link'  %>
+            </span>
+          </li>
+          <li class="col-md">
+            <span style="font-size:14px">
+              <%= link_to "Iniciar sesión", new_user_session_path, :class => 'navbar-link'  %>
+            </span>
+          </li>
+        <% end %>
+      </ul>
+    </nav>
+
+  </head>
